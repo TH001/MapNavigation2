@@ -51,11 +51,18 @@ public class Algorithm {
 	public Algorithm() {
 		// TODO Auto-generated constructor stub
 	}
+	
 	public void doeveything() {
 		System.out.println("Working");
 	}
 	
+	public int readimage(String inputname) {
+		if(conv.readpicture(inputname)!=0)return 50;
+		else return 100;
+	}
+	
 	public void createmaps() {
+		//TODO add Status Return
 		colormap= new int[conv.pixelX][conv.pixelY];		//karten größe intitaliesienen
 		distancemap= new double[conv.pixelX][conv.pixelY];	//karten größe initialiesieren
 		lasthopmap= new int[conv.pixelX][conv.pixelY][2];	//karten größe initialiesieren
@@ -101,8 +108,23 @@ public class Algorithm {
 			}
 		}
 	}
-	public void setuplocation() {
-		if(this.colormap[startX][startY]!=DEFINES.RED) {	//Startpunkt muss begehbar sein
+	
+	public int posibleposition(int xCoodinate, int yCoodinate) {
+		if(xCoodinate<0||xCoodinate>=colormap.length||yCoodinate<0||yCoodinate>=colormap[0].length) {
+			return -2;
+		}
+		else if(colormap[xCoodinate][yCoodinate]==DEFINES.RED) {
+			return -1;
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	public void setuplocation(int xCoodinate,int yCoodinate) {
+		startX = xCoodinate;
+		startY = yCoodinate;
+		if(this.colormap[startX][startY]!=DEFINES.RED) {	//Startpunkt muss begehbar sein(doppelte Überprüfung)
 			tempcoodinate[0]=startX;
 			tempcoodinate[1]=startY;
 			this.colormap[tempcoodinate[0]][startY]=DEFINES.BLUE;
@@ -234,7 +256,9 @@ public class Algorithm {
 		//aktuellen punkt als final berechnet makieren
 		this.colormap[tempcoodinate[0]][tempcoodinate[1]]=DEFINES.YELLO;
 	}
-	public void markway() {
+	public void markway(int xCoodinate,int yCoodinate) {
+		tagetX = xCoodinate;
+		tagetY = yCoodinate;
 			tempcoodinate[0]=startX;
 			tempcoodinate[1]=startY;
 			this.colormap[tempcoodinate[0]][tempcoodinate[1]]=DEFINES.BLUE;
@@ -254,6 +278,11 @@ public class Algorithm {
 			tempcoodinate[0]=buffer;
 		}
 	}
+	
+	public void outputtofile(String outputname) {
+		conv.writepicture(outputname,colormap);
+	}
+	
 	public void readfromFile() {
 		String line;
 	    try {

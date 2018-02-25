@@ -22,7 +22,7 @@ public class Converter {
 	
 	public BufferedImage inputimg;
 	public BufferedImage outputimg;
-	public File inputfile;
+	public File inputfile = new File("notnull");
 	public File outputfile;
 	public Color c;
 	
@@ -36,8 +36,9 @@ public class Converter {
 //		System.out.println(conv.getcolor(01, 01));
 //		
 //	}
-	public void readpicture(String inputname) {
+	public int readpicture(String inputname) {
 		
+		if(inputname == inputfile.getName()) return 0;
 		//write picture-file to BufferedImage
 		inputimg=null;
 		inputfile=new File(inputname);
@@ -51,6 +52,7 @@ public class Converter {
 		pixelX=inputimg.getWidth()+2;	//eins weil null ja schon zusätzlich da ist
 		pixelY=inputimg.getHeight()+2;
 		System.out.println("höhe:" + (pixelY-2) + " breite:" + (pixelX-2));
+		return 1;
 	}
 	public int getcolor(int xcoordinate, int ycoordinate) {
 		//adding black edge

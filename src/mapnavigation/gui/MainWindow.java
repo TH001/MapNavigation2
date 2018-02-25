@@ -34,14 +34,24 @@ public class MainWindow extends JFrame {
 	
 	public static final long serialVersionUID = 1;
 	public JPanel contentPane;
+	public JPanel panel;
+	public JPanel panel_1;
 	public JTextField Inputname;
 	public JTextField Outputname;
 	public JFormattedTextField startX;
 	public JFormattedTextField startY;
 	public JFormattedTextField targetY;
 	public JFormattedTextField targetX;
-	public JProgressBar progressBar;
-	public JProgressBar progressBar_active;
+	public Button Run;
+	public Button calcdistances;
+	public Button checkbutton;
+	public Button SetStart;
+	public Button SetTarget;
+	
+	private JLabel StatusMesssage;
+	private JProgressBar progressBar;
+	private JProgressBar progressBar_active;
+	
 	
 	private int xx,xy;
 	
@@ -49,6 +59,8 @@ public class MainWindow extends JFrame {
 	private int progressbarvalue=50;
 	
 	String newoutputname = "out.png";
+	int startState=0;
+	int targetState=0;
 	
 	private int checkedInput;	
 	private int writingattempt = 0;
@@ -57,7 +69,7 @@ public class MainWindow extends JFrame {
 	private int calcingactive = 0;
 	private int finallydone = 0;
 	/**
-	 * Create the frame.
+	 * Create the 
 	 */
 	public MainWindow(Algorithm calculation) {
 		setBackground(Color.WHITE);
@@ -68,17 +80,6 @@ public class MainWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		Button Run = new Button("Run Waycalc");
-		Run.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(calcingactive == 0) {
-					calcingactive = 1;
-				}
-				calculation.doeveything();
-				writetoFile();
-			}
-		});
-		
 		JPanel out_panel_0 = new JPanel();
 		out_panel_0.setBounds(335, 0, 314, 450);
 		contentPane.add(out_panel_0);
@@ -86,10 +87,65 @@ public class MainWindow extends JFrame {
 		JPanel out_panel_1 = new JPanel();
 		out_panel_1.setBounds(0, 525, 581, 99);
 		contentPane.add(out_panel_1);
+		
+		Run = new Button("Run Waycalc");
+		Run.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Run.setLabel("Calculating Way");
+				Run.disable();
+				checkbutton.disable();
+				SetStart.disable();
+				SetTarget.disable();
+				setStatus("Calculating Distances please wait", 50, 70);
+				repaint();
+				calculation.calcdistances();
+				setStatus("schreibe Weg bitte Warten", 50, 90);
+				repaint();
+				calculation.markway(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				setStatus("speichere Datei bitte Warten", 50, 95);
+				repaint();
+				calculation.outputtofile(Outputname.getText());
+				
+				Run.enable();
+				checkbutton.enable();
+				SetStart.enable();
+				SetTarget.enable();
+				setStatus("Weg berechnet! siehe"+Outputname.getText()+" Neue Änderungen?", 100, 100);
+				Outputname.setText(generateNewOutputname());
+				repaint();
+			}
+		});
 		Run.setForeground(Color.WHITE);
 		Run.setBackground(new Color(241, 57, 83));
 		Run.setBounds(25, 465, 283, 36);
 		contentPane.add(Run);
+		
+//		calcdistances = new Button("calcdistances Waycalc");
+//		calcdistances.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				calcdistances.setLabel("Calculating Way");
+//				calcdistances.disable();
+//				checkbutton.disable();
+//				SetStart.disable();
+//				SetTarget.disable();
+//				setStatus("Calculating Distances please wait", 50, 30);
+//				repaint();
+//				
+//				calculation.calcdistances();
+//				
+//				calcdistances.enable();
+//				checkbutton.enable();
+//				SetStart.enable();
+//				SetTarget.enable();
+//				setStatus("Weg berechnet! siehe"+Outputname.getText()+" Neue Änderungen?", 0, 60);
+//				Outputname.setText(generateNewOutputname());
+//				repaint();
+//			}
+//		});
+//		calcdistances.setForeground(Color.WHITE);
+//		calcdistances.setBackground(new Color(241, 57, 83));
+//		calcdistances.setBounds(25, 465, 283, 36);
+//		contentPane.add(calcdistances);
 		
 		JLabel lbl_close = new JLabel("X");
 		lbl_close.addMouseListener(new MouseAdapter() {
@@ -110,7 +166,7 @@ public class MainWindow extends JFrame {
 		lbl_minimize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-//				this.frame.setState(Frame.ICONIFIED);//TODO change Wrong place
+//				this.setState(Frame.ICONIFIED);//TODO change Wrong place
 			}
 		});
 		lbl_minimize.setHorizontalAlignment(SwingConstants.CENTER);
@@ -119,7 +175,7 @@ public class MainWindow extends JFrame {
 		lbl_minimize.setBounds(282, 0, 37, 27);
 		contentPane.add(lbl_minimize);
 		
-		JLabel lblNewLabel = new JLabel("MapNavigation V1.2 ready to go");
+		JLabel lblNewLabel = new JLabel("MapNavigation V2.1 ready to go");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNewLabel.setForeground(new Color(240, 248, 255));
@@ -149,7 +205,7 @@ public class MainWindow extends JFrame {
 		label.setVerticalAlignment(SwingConstants.TOP);
 		label.setIcon(new ImageIcon(MainWindow.class.getResource("/designe/imgsource/picture1.jpg")));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(245, 245, 245, 190));
 		panel.setBounds(12, 38, 306, 80);
@@ -178,7 +234,7 @@ public class MainWindow extends JFrame {
 		lblStatus.setBounds(15, 10, 50, 20);
 		panel.add(lblStatus);
 		
-		JLabel StatusMesssage = new JLabel("we got you");
+		StatusMesssage = new JLabel("we got you");
 		StatusMesssage.setHorizontalAlignment(SwingConstants.LEFT);
 		StatusMesssage.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		StatusMesssage.setBackground(Color.GRAY);
@@ -203,18 +259,28 @@ public class MainWindow extends JFrame {
 		contentPane.add(Inputname);
 		Inputname.setColumns(10);
 		
-		Button checkbutton = new Button("load?");
+		checkbutton = new Button("load?");
 		checkbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(checkbutton.getLabel()=="load?") {
 					File picture = new File(Inputname.getText());
 					if(picture.exists()) {
+						while(calculation.readimage(picture.getName())!=100) {
+							setStatus("lese Bild",calculation.readimage(picture.getName()),5);
+						}
+						calculation.createmaps();
 						checkbutton.setLabel("checked");
 						checkbutton.setBackground(Color.GREEN);
 						checkbutton.setForeground(Color.DARK_GRAY);
 						checkedInput = 2;
 						System.out.println("changeto:" + checkedInput);
 						writetoFile();
+						Inputname.disable();
+						startX.enable();
+						startY.enable();
+						SetStart.enable();
+						setStatus("geben sie einen Startpunkt an", 0, 10);
+						repaint();
 					}
 					else {
 						checkbutton.setLabel("not found");
@@ -229,12 +295,22 @@ public class MainWindow extends JFrame {
 				else if(checkbutton.getLabel()=="not found") {
 					File picture = new File(Inputname.getText());
 					if(picture.exists()) {
+						while(calculation.readimage(picture.getName())!=100) {
+							setStatus("lese Bild",calculation.readimage(picture.getName()),5);
+						}
+						calculation.createmaps();
 						checkbutton.setLabel("checked");
 						checkbutton.setBackground(Color.GREEN);
 						checkbutton.setForeground(Color.DARK_GRAY);
 						checkedInput = 2;
 						System.out.println("changeto:" + checkedInput);
 						writetoFile();
+						Inputname.disable();
+						startX.enable();
+						startY.enable();
+						SetStart.enable();
+						setStatus("geben sie einen Startpunkt an", 0, 10);
+						repaint();
 					}
 					else {
 						checkbutton.setLabel("not found");
@@ -245,22 +321,42 @@ public class MainWindow extends JFrame {
 					}
 				}
 				else {
-					File picture = new File(Inputname.getText());
-					if(picture.exists()) {
-//						checkbutton.setLabel("load?");		
-//						checkbutton.setBackground(Color.DARK_GRAY);
-//						checkbutton.setForeground(Color.WHITE);
-//						checkedInput = 0;
+					if(!Inputname.isEnabled()) {
+						checkbutton.setLabel("load?");		
+						checkbutton.setBackground(Color.DARK_GRAY);
+						checkbutton.setForeground(Color.WHITE);
+						checkedInput = 0;
 						System.out.println("changeto:" + checkedInput);
 						writetoFile();
+						disableall();
+						SetStart.setLabel("Set Start");
+						SetTarget.setLabel("Set Target");
+						checkbutton.enable();
+						Inputname.enable();
+						setStatus("geben sie eine Inputkarte an", 0, 0);
+						repaint();
 					}
 					else {
-						checkbutton.setLabel("not found");
-						checkbutton.setBackground(Color.ORANGE);
-						checkbutton.setForeground(Color.DARK_GRAY);
-						checkedInput = 1;
-						System.out.println("changeto:" + checkedInput);
-						writetoFile();
+						File picture = new File(Inputname.getText());
+						if(picture.exists()) {
+							while(calculation.readimage(picture.getName())!=100) {
+								setStatus("lese Bild",calculation.readimage(picture.getName()),5);
+							}
+		//						checkbutton.setLabel("load?");		
+		//						checkbutton.setBackground(Color.DARK_GRAY);
+		//						checkbutton.setForeground(Color.WHITE);
+		//						checkedInput = 0;
+							System.out.println("changeto:" + checkedInput);
+							writetoFile();
+						}
+						else {
+							checkbutton.setLabel("not found");
+							checkbutton.setBackground(Color.ORANGE);
+							checkbutton.setForeground(Color.DARK_GRAY);
+							checkedInput = 1;
+							System.out.println("changeto:" + checkedInput);
+							writetoFile();
+						}
 					}
 				}
 			}
@@ -296,7 +392,7 @@ public class MainWindow extends JFrame {
 		Outputname.setBounds(25, 228, 283, 36);
 		contentPane.add(Outputname);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(245,245,245,190));
 		panel_1.setBounds(12, 283, 306, 162);
 		contentPane.add(panel_1);
@@ -311,11 +407,25 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				startX.setText(startX.getText().replaceAll("\\D+",""));
-				if(0>Integer.parseInt(startX.getText())||Integer.parseInt(startX.getText())>1/*pixelX*/) {
+				startState=calculation.posibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+				if(startState==-2) {
+					startX.setBackground(Color.RED);
+					startY.setBackground(Color.RED);
+					SetStart.disable();
+					repaint();
+					//TODO add statusmsg
+				}
+				else if(startState==-1) {
 					startX.setBackground(Color.ORANGE);
+					startY.setBackground(Color.ORANGE);
+					SetStart.disable();
+					repaint();
 				}
 				else {
 					startX.setBackground(Color.WHITE);
+					startY.setBackground(Color.WHITE);
+					SetStart.enable();
+					repaint();
 				}
 			}
 		});
@@ -330,11 +440,25 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				startY.setText(startY.getText().replaceAll("\\D+",""));
-				if(0>Integer.parseInt(startY.getText())||Integer.parseInt(startY.getText())>1/*pixelY*/) {
+				startState=calculation.posibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+				if(startState==-2) {
+					startX.setBackground(Color.RED);
+					startY.setBackground(Color.RED);
+					SetStart.disable();
+					repaint();
+					//TODO add statusmsg
+				}
+				else if(startState==-1) {
+					startX.setBackground(Color.ORANGE);
 					startY.setBackground(Color.ORANGE);
+					SetStart.disable();
+					repaint();
 				}
 				else {
+					startX.setBackground(Color.WHITE);
 					startY.setBackground(Color.WHITE);
+					SetStart.enable();
+					repaint();
 				}
 			}
 		});
@@ -344,14 +468,38 @@ public class MainWindow extends JFrame {
 		startY.setText("2");
 		startY.setToolTipText("Y Coodinate");
 		
-		Button SetStart = new Button("Set Start");
+		SetStart = new Button("Set Start");
 		SetStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(startset==0) {
-					startset = 1;
-					calcingactive = 0;
+				if(SetStart.getLabel()=="Set Start") {
+					calculation.setuplocation(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+					SetStart.setLabel("Reset Start?");
+					startX.disable();
+					startY.disable();
+					if(SetTarget.getLabel()=="Set Target") {
+						targetX.enable();
+						targetY.enable();
+						SetTarget.enable();
+						setStatus("geben sie einen Zielpunkt an", 0, 20);
+					}
+					else {
+						targetX.disable();
+						targetY.disable();
+						SetTarget.enable();
+						Run.enable();
+						setStatus("starten Sie die Berechnung", 0, 30);
+					}
+					repaint();
 				}
-				writetoFile();
+				else {
+					SetStart.setLabel("Set Start");
+					disableall();
+					SetStart.enable();
+					startX.enable();
+					startY.enable();
+					setStatus("geben sie einen Startpunkt an", 0, 10);
+					repaint();
+				}
 			}
 		});
 		SetStart.setBounds(14, 116, 133, 36);
@@ -368,11 +516,25 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				targetX.setText(targetX.getText().replaceAll("\\D+",""));
-				if(0>Integer.parseInt(targetX.getText())||Integer.parseInt(targetX.getText())>1/*pixelX*/) {
+				targetState=calculation.posibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				if(targetState==-2) {
+					targetX.setBackground(Color.RED);
+					targetY.setBackground(Color.RED);
+					SetTarget.disable();
+					repaint();
+					//TODO add statusmsg
+				}
+				else if(targetState==-1) {
 					targetX.setBackground(Color.ORANGE);
+					targetY.setBackground(Color.ORANGE);
+					SetTarget.disable();
+					repaint();
 				}
 				else {
 					targetX.setBackground(Color.WHITE);
+					targetY.setBackground(Color.WHITE);
+					SetTarget.enable();
+					repaint();
 				}
 			}
 		});
@@ -387,11 +549,25 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				targetY.setText(targetY.getText().replaceAll("\\D+",""));
-				if(0>Integer.parseInt(targetY.getText())||Integer.parseInt(targetY.getText())>1/*pixelY*/) {
+				targetState=calculation.posibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				if(targetState==-2) {
+					targetX.setBackground(Color.RED);
+					targetY.setBackground(Color.RED);
+					SetTarget.disable();
+					repaint();
+					//TODO add statusmsg
+				}
+				else if(targetState==-1) {
+					targetX.setBackground(Color.ORANGE);
 					targetY.setBackground(Color.ORANGE);
+					SetTarget.disable();
+					repaint();
 				}
 				else {
+					targetX.setBackground(Color.WHITE);
 					targetY.setBackground(Color.WHITE);
+					SetTarget.enable();
+					repaint();
 				}
 			}
 		});
@@ -402,13 +578,27 @@ public class MainWindow extends JFrame {
 		targetY.setToolTipText("Y Coodinate");
 		
 		
-		Button SetTarget = new Button("Set Target");
+		SetTarget = new Button("Set Target");
 		SetTarget.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(targetset == 0) {
-					targetset = 1;
+				if(SetTarget.getLabel()=="Set Target") {
+					SetTarget.setLabel("Reset Target?");
+					targetX.disable();
+					targetY.disable();
+					Run.enable();
+					setStatus("starten Sie die Berechnung", 0, 30);
+					repaint();
 				}
-				writetoFile();
+				else {
+					SetTarget.setLabel("Set Target");
+					disableall();
+					SetStart.enable();
+					SetTarget.enable();
+					targetX.enable();
+					targetY.enable();
+					setStatus("geben sie einen Zielpunkt an", 0, 20);
+					repaint();
+				}
 			}
 		});
 		SetTarget.setBounds(162, 116, 133, 36);
@@ -423,6 +613,30 @@ public class MainWindow extends JFrame {
 		background.setVerticalAlignment(SwingConstants.TOP);
 		background.setIcon(new ImageIcon(MainWindow.class.getResource("/designe/imgsource/LogoWaterprint.png")));
 		
+	}
+	
+	public void disableall() {
+//		panel.disable();
+//		panel_1.disable();
+		Inputname.disable();
+//		Outputname.disable();
+		startX.disable();
+		startY.disable();
+		targetY.disable();
+		targetX.disable();
+		progressBar.disable();
+		progressBar_active.disable();
+		Run.disable();
+//		checkbutton.disable();
+		SetStart.disable();
+		SetTarget.disable();
+	}
+	
+	public void setStatus(String statusmessage, int activepersentage, int persentage) {
+		StatusMesssage.setText(statusmessage);
+		progressBar.setValue(persentage);
+		progressBar_active.setValue(activepersentage);
+		contentPane.repaint();
 	}
 
 	public String generateNewOutputname() {

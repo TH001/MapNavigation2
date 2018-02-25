@@ -6,7 +6,13 @@
  */
 package mapnavigation.gui;
 
+import java.awt.Button;
 import java.awt.EventQueue;
+
+import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 import mapnavigation.calculation.Algorithm;
 
@@ -24,12 +30,14 @@ public class UIfunktion {
 					MainWindow frame = new MainWindow(calculation);
 					frame.setUndecorated(true);
 					frame.setVisible(true);
-					frame.contentPane.disable();
+					frame.disableall();
+					frame.Inputname.enable();
+					frame.setStatus("geben sie eine Inputkarte an", 0, 0);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-
+	
 }
