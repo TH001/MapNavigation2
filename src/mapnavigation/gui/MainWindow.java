@@ -96,6 +96,9 @@ public class MainWindow extends JFrame {
 				checkbutton.disable();
 				SetStart.disable();
 				SetTarget.disable();
+				setStatus("lösche alten Weg bitte Warten", 50, 85);
+				calculation.cleancolormap();
+				repaint();
 				setStatus("schreibe Weg bitte Warten", 50, 90);
 				repaint();
 				calculation.markway(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
@@ -185,7 +188,7 @@ public class MainWindow extends JFrame {
 		lbl_minimize.setBounds(282, 0, 37, 27);
 		contentPane.add(lbl_minimize);
 		
-		JLabel lblNewLabel = new JLabel("MapNavigation V2.1 ready to go");
+		JLabel lblNewLabel = new JLabel("MapNavigation V2.3 ready to go");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNewLabel.setForeground(new Color(240, 248, 255));
@@ -421,20 +424,20 @@ public class MainWindow extends JFrame {
 				if(startState==-2) {
 					startX.setBackground(Color.RED);
 					startY.setBackground(Color.RED);
-					SetStart.disable();
+//					SetStart.disable();
 					repaint();
 					//TODO add statusmsg
 				}
 				else if(startState==-1) {
 					startX.setBackground(Color.ORANGE);
 					startY.setBackground(Color.ORANGE);
-					SetStart.disable();
+//					SetStart.disable();
 					repaint();
 				}
 				else {
 					startX.setBackground(Color.WHITE);
 					startY.setBackground(Color.WHITE);
-					SetStart.enable();
+//					SetStart.enable();
 					repaint();
 				}
 			}
@@ -454,20 +457,20 @@ public class MainWindow extends JFrame {
 				if(startState==-2) {
 					startX.setBackground(Color.RED);
 					startY.setBackground(Color.RED);
-					SetStart.disable();
+//					SetStart.disable();
 					repaint();
 					//TODO add statusmsg
 				}
 				else if(startState==-1) {
 					startX.setBackground(Color.ORANGE);
 					startY.setBackground(Color.ORANGE);
-					SetStart.disable();
+//					SetStart.disable();
 					repaint();
 				}
 				else {
 					startX.setBackground(Color.WHITE);
 					startY.setBackground(Color.WHITE);
-					SetStart.enable();
+//					SetStart.enable();
 					repaint();
 				}
 			}
@@ -481,41 +484,76 @@ public class MainWindow extends JFrame {
 		SetStart = new Button("Set Start");
 		SetStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(SetStart.getLabel()=="Set Start") {
-					calculation.setuplocation(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
-					SetStart.setLabel("Reset Start?");
-					startX.disable();
-					startY.disable();
-					SetTarget.enable();
-					DistancesRun.enable();
-					if(calculation.getdistanceready()==0) {
-						setStatus("starten Sie die Distanceberechnung", 0, 20);
-					}
-					else {
-						if(SetTarget.getLabel()=="Set Target") {
-							targetX.enable();
-							targetY.enable();
-							SetTarget.enable();
-							setStatus("geben sie einen Zielpunkt an", 0, 60);
-						}
-						else {
-							targetX.disable();
-							targetY.disable();
-							SetTarget.enable();
-							Run.enable();
-							setStatus("starten Sie die Wegberechnung", 0, 70);
-						}
-					}
+				startState=calculation.posibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+				if(startState==-2) {
+					startX.setBackground(Color.RED);
+					startY.setBackground(Color.RED);
+//					SetStart.disable();
+					repaint();
+					//TODO add statusmsg
+				}
+				else if(startState==-1) {
+					startX.setBackground(Color.ORANGE);
+					startY.setBackground(Color.ORANGE);
+//					SetStart.disable();
 					repaint();
 				}
 				else {
-					SetStart.setLabel("Set Start");
-					disableall();
-					SetStart.enable();
-					startX.enable();
-					startY.enable();
-					setStatus("geben sie einen Startpunkt an", 0, 10);
+					startX.setBackground(Color.WHITE);
+					startY.setBackground(Color.WHITE);
+//					SetStart.enable();
 					repaint();
+				}
+				if(startState == 0) {
+					if(SetStart.getLabel()=="Set Start") {
+						calculation.setuplocation(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+						SetStart.setLabel("Reset Start?");
+						startX.disable();
+						startY.disable();
+						SetTarget.enable();
+						DistancesRun.enable();
+						if(calculation.getdistanceready()==0) {
+							if(SetTarget.getLabel()=="Set Target") {
+								targetX.enable();
+								targetY.enable();
+							}
+							else {
+								targetX.disable();
+								targetY.disable();
+							}
+							setStatus("starten Sie die Distanceberechnung", 0, 20);
+						}
+						else {
+							if(SetTarget.getLabel()=="Set Target") {
+								targetX.enable();
+								targetY.enable();
+								SetTarget.enable();
+								setStatus("geben sie einen Zielpunkt an", 0, 60);
+							}
+							else {
+								targetX.disable();
+								targetY.disable();
+								SetTarget.enable();
+								Run.enable();
+								setStatus("starten Sie die Wegberechnung", 0, 70);
+							}
+						}
+						repaint();
+					}
+					else {
+						SetStart.setLabel("Set Start");
+						disableall();
+						SetStart.enable();
+						startX.enable();
+						startY.enable();
+						setStatus("geben sie einen Startpunkt an", 0, 10);
+						repaint();
+					}
+				}
+				else if(startState == -1)setStatus("Startpunkt liegt auf Wand", 0, 10);
+				else if(startState == -2)setStatus("Startpunkt liegt außerhalb der Karte", 0, 10);
+				else{
+					setStatus("Startpunkt führt zu unbekannten Fehler", 0, 10);
 				}
 			}
 		});
@@ -537,20 +575,20 @@ public class MainWindow extends JFrame {
 				if(targetState==-2) {
 					targetX.setBackground(Color.RED);
 					targetY.setBackground(Color.RED);
-					SetTarget.disable();
+//					SetTarget.disable();
 					repaint();
 					//TODO add statusmsg
 				}
 				else if(targetState==-1) {
 					targetX.setBackground(Color.ORANGE);
 					targetY.setBackground(Color.ORANGE);
-					SetTarget.disable();
+//					SetTarget.disable();
 					repaint();
 				}
 				else {
 					targetX.setBackground(Color.WHITE);
 					targetY.setBackground(Color.WHITE);
-					SetTarget.enable();
+//					SetTarget.enable();
 					repaint();
 				}
 			}
@@ -570,20 +608,19 @@ public class MainWindow extends JFrame {
 				if(targetState==-2) {
 					targetX.setBackground(Color.RED);
 					targetY.setBackground(Color.RED);
-					SetTarget.disable();
+//					SetTarget.disable();
 					repaint();
-					//TODO add statusmsg
 				}
 				else if(targetState==-1) {
 					targetX.setBackground(Color.ORANGE);
 					targetY.setBackground(Color.ORANGE);
-					SetTarget.disable();
+//					SetTarget.disable();
 					repaint();
 				}
 				else {
 					targetX.setBackground(Color.WHITE);
 					targetY.setBackground(Color.WHITE);
-					SetTarget.enable();
+//					SetTarget.enable();
 					repaint();
 				}
 			}
@@ -598,34 +635,71 @@ public class MainWindow extends JFrame {
 		SetTarget = new Button("Set Target");
 		SetTarget.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(SetTarget.getLabel()=="Set Target") {
-					SetTarget.setLabel("Reset Target?");
-					targetX.disable();
-					targetY.disable();
-					SetStart.enable();
-					if(calculation.getdistanceready()==0) {
-						setStatus("starten Sie die Distanceberechnung", 0, 30);
-						DistancesRun.enable();
-					}
-					else {
-						Run.enable();
-						setStatus("starten Sie die Wegberechnung", 0, 70);
-					}
+				targetState=calculation.posibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				if(targetState==-2) {
+					targetX.setBackground(Color.RED);
+					targetY.setBackground(Color.RED);
+//					SetTarget.disable();
+					repaint();
+					//TODO add statusmsg
+				}
+				else if(targetState==-1) {
+					targetX.setBackground(Color.ORANGE);
+					targetY.setBackground(Color.ORANGE);
+//					SetTarget.disable();
 					repaint();
 				}
 				else {
-					SetTarget.setLabel("Set Target");
-					disableall();
-					SetTarget.enable();
-					targetX.enable();
-					targetY.enable();
-					if(calculation.getdistanceready()==0) {
-						setStatus("geben sie einen Zielpunkt an", 0, 20);
+					targetX.setBackground(Color.WHITE);
+					targetY.setBackground(Color.WHITE);
+//					SetTarget.enable();
+					repaint();
+				}
+				if(targetState == 0) {
+					if(SetTarget.getLabel()=="Set Target") {
+						SetTarget.setLabel("Reset Target?");
+						targetX.disable();
+						targetY.disable();
+						SetStart.enable();
+						if(calculation.getdistanceready()==0) {
+							setStatus("starten Sie die Distanceberechnung", 0, 30);
+							DistancesRun.enable();
+						}
+						else {
+							Run.enable();
+							setStatus("starten Sie die Wegberechnung", 0, 70);
+						}
+						repaint();
 					}
 					else {
-						setStatus("geben sie einen Zielpunkt an", 0, 60);
+						SetTarget.setLabel("Set Target");
+						disableall();
+						SetTarget.enable();
+						targetX.enable();
+						targetY.enable();
+						if(calculation.getdistanceready()==0) {
+							setStatus("geben sie einen Zielpunkt an", 0, 20);
+						}
+						else {
+							setStatus("geben sie einen Zielpunkt an", 0, 60);
+						}
+						repaint();
 					}
-					repaint();
+				}
+				else if(calculation.getdistanceready()==0) {
+					if(targetState == -1)setStatus("Zielpunkt liegt auf Wand", 0, 20);
+					else if(targetState == -2)setStatus("Zielpunkt liegt außerhalb der Karte", 0, 20);
+					else{
+						setStatus("Zielpunkt führt zu unbekannten Fehler", 0, 20);
+					}
+				}
+				else {
+					if(targetState == -1)setStatus("Zielpunkt liegt auf Wand", 0, 60);
+					else if(targetState == -2)setStatus("Zielpunkt liegt außerhalb der Karte", 0, 60);
+					else{
+						setStatus("Zielpunkt führt zu unbekannten Fehler", 0, 60);
+					}
+					
 				}
 			}
 		});
