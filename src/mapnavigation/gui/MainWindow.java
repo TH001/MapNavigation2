@@ -43,7 +43,7 @@ public class MainWindow extends JFrame {
 	public JFormattedTextField targetY;
 	public JFormattedTextField targetX;
 	public Button Run;
-	public Button calcdistances;
+	public Button DistancesRun;
 	public Button checkbutton;
 	public Button SetStart;
 	public Button SetTarget;
@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
 	public MainWindow(Algorithm calculation) {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 335*1, 525*1);
+		setBounds(100, 100, 335*1, 545*1);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		setContentPane(contentPane);
@@ -85,20 +85,17 @@ public class MainWindow extends JFrame {
 		contentPane.add(out_panel_0);
 		
 		JPanel out_panel_1 = new JPanel();
-		out_panel_1.setBounds(0, 525, 581, 99);
+		out_panel_1.setBounds(0, 545, 581, 99);
 		contentPane.add(out_panel_1);
 		
 		Run = new Button("Run Waycalc");
 		Run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Run.setLabel("Calculating Way");
+				Run.setLabel("calculating Way...");
 				Run.disable();
 				checkbutton.disable();
 				SetStart.disable();
 				SetTarget.disable();
-				setStatus("Calculating Distances please wait", 50, 70);
-				repaint();
-				calculation.calcdistances();
 				setStatus("schreibe Weg bitte Warten", 50, 90);
 				repaint();
 				calculation.markway(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
@@ -110,42 +107,55 @@ public class MainWindow extends JFrame {
 				checkbutton.enable();
 				SetStart.enable();
 				SetTarget.enable();
-				setStatus("Weg berechnet! siehe"+Outputname.getText()+" Neue Änderungen?", 100, 100);
+				Run.setLabel("Run Waycalc");
+				setStatus("Weg berechnet! siehe "+Outputname.getText()+" Neue Änderungen?", 100, 100);
 				Outputname.setText(generateNewOutputname());
 				repaint();
 			}
 		});
 		Run.setForeground(Color.WHITE);
 		Run.setBackground(new Color(241, 57, 83));
-		Run.setBounds(25, 465, 283, 36);
+		Run.setBounds(25, 490, 283, 36);
 		contentPane.add(Run);
 		
-//		calcdistances = new Button("calcdistances Waycalc");
-//		calcdistances.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				calcdistances.setLabel("Calculating Way");
-//				calcdistances.disable();
-//				checkbutton.disable();
-//				SetStart.disable();
-//				SetTarget.disable();
-//				setStatus("Calculating Distances please wait", 50, 30);
-//				repaint();
-//				
-//				calculation.calcdistances();
-//				
-//				calcdistances.enable();
-//				checkbutton.enable();
-//				SetStart.enable();
-//				SetTarget.enable();
-//				setStatus("Weg berechnet! siehe"+Outputname.getText()+" Neue Änderungen?", 0, 60);
-//				Outputname.setText(generateNewOutputname());
-//				repaint();
-//			}
-//		});
-//		calcdistances.setForeground(Color.WHITE);
-//		calcdistances.setBackground(new Color(241, 57, 83));
-//		calcdistances.setBounds(25, 465, 283, 36);
-//		contentPane.add(calcdistances);
+		DistancesRun = new Button("Run Distancescalc");
+		DistancesRun.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DistancesRun.setLabel("Calculating Distances...");
+				DistancesRun.disable();
+				checkbutton.disable();
+				SetStart.disable();
+				SetTarget.disable();
+				setStatus("Calculating Distances please wait", 50, 30);
+				repaint();
+				
+				calculation.calcdistances();
+				
+				DistancesRun.enable();
+				checkbutton.enable();
+				SetStart.enable();
+				SetTarget.enable();
+				DistancesRun.setLabel("Run Distancescalc");
+				if(SetTarget.getLabel()=="Set Target") {
+					targetX.enable();
+					targetY.enable();
+					SetTarget.enable();
+					setStatus("geben sie einen Zielpunkt an", 0, 60);
+				}
+				else {
+					targetX.disable();
+					targetY.disable();
+					SetTarget.enable();
+					Run.enable();
+					setStatus("starten Sie die Wegberechnung", 0, 70);
+				}
+				repaint();
+			}
+		});
+		DistancesRun.setForeground(Color.WHITE);
+		DistancesRun.setBackground(new Color(241, 57, 83));
+		DistancesRun.setBounds(25, 445, 283, 36);
+		contentPane.add(DistancesRun);
 		
 		JLabel lbl_close = new JLabel("X");
 		lbl_close.addMouseListener(new MouseAdapter() {
@@ -238,7 +248,7 @@ public class MainWindow extends JFrame {
 		StatusMesssage.setHorizontalAlignment(SwingConstants.LEFT);
 		StatusMesssage.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		StatusMesssage.setBackground(Color.GRAY);
-		StatusMesssage.setBounds(70, 12, 200, 20);
+		StatusMesssage.setBounds(70, 12, 220, 20);
 		panel.add(StatusMesssage);
 		
 		JLabel Input = new JLabel("Input Karte");
@@ -476,18 +486,25 @@ public class MainWindow extends JFrame {
 					SetStart.setLabel("Reset Start?");
 					startX.disable();
 					startY.disable();
-					if(SetTarget.getLabel()=="Set Target") {
-						targetX.enable();
-						targetY.enable();
-						SetTarget.enable();
-						setStatus("geben sie einen Zielpunkt an", 0, 20);
+					SetTarget.enable();
+					DistancesRun.enable();
+					if(calculation.getdistanceready()==0) {
+						setStatus("starten Sie die Distanceberechnung", 0, 20);
 					}
 					else {
-						targetX.disable();
-						targetY.disable();
-						SetTarget.enable();
-						Run.enable();
-						setStatus("starten Sie die Berechnung", 0, 30);
+						if(SetTarget.getLabel()=="Set Target") {
+							targetX.enable();
+							targetY.enable();
+							SetTarget.enable();
+							setStatus("geben sie einen Zielpunkt an", 0, 60);
+						}
+						else {
+							targetX.disable();
+							targetY.disable();
+							SetTarget.enable();
+							Run.enable();
+							setStatus("starten Sie die Wegberechnung", 0, 70);
+						}
 					}
 					repaint();
 				}
@@ -585,18 +602,29 @@ public class MainWindow extends JFrame {
 					SetTarget.setLabel("Reset Target?");
 					targetX.disable();
 					targetY.disable();
-					Run.enable();
-					setStatus("starten Sie die Berechnung", 0, 30);
+					SetStart.enable();
+					if(calculation.getdistanceready()==0) {
+						setStatus("starten Sie die Distanceberechnung", 0, 30);
+						DistancesRun.enable();
+					}
+					else {
+						Run.enable();
+						setStatus("starten Sie die Wegberechnung", 0, 70);
+					}
 					repaint();
 				}
 				else {
 					SetTarget.setLabel("Set Target");
 					disableall();
-					SetStart.enable();
 					SetTarget.enable();
 					targetX.enable();
 					targetY.enable();
-					setStatus("geben sie einen Zielpunkt an", 0, 20);
+					if(calculation.getdistanceready()==0) {
+						setStatus("geben sie einen Zielpunkt an", 0, 20);
+					}
+					else {
+						setStatus("geben sie einen Zielpunkt an", 0, 60);
+					}
 					repaint();
 				}
 			}
@@ -627,6 +655,7 @@ public class MainWindow extends JFrame {
 		progressBar.disable();
 		progressBar_active.disable();
 		Run.disable();
+		DistancesRun.disable();
 //		checkbutton.disable();
 		SetStart.disable();
 		SetTarget.disable();

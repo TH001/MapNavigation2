@@ -42,6 +42,8 @@ public class Algorithm {
 	private int tagetX = -1;
 	private int tagetY = -1;
 	
+	private int distanceready = 0;
+	
 //	double outpercentage;
 //	double percentage;
 //	
@@ -136,6 +138,7 @@ public class Algorithm {
 		else {
 			System.out.println("Startlocation couldn't be set!");
 		}
+		distanceready=0;
 	}
 	public void calcdistances() {
 		System.out.println(nowalls);
@@ -163,6 +166,7 @@ public class Algorithm {
 			}
 		}
 //		System.out.println(percentage + ";" + outpercentage);
+		distanceready=1;
 	}
 	public void calcroundpoint() {
 		//kreisformiges abarbeiten der punkte um den temporen punkt(unter tempcoodinate) nach
@@ -281,6 +285,10 @@ public class Algorithm {
 	
 	public void outputtofile(String outputname) {
 		conv.writepicture(outputname,colormap);
+	}
+	
+	public int getdistanceready() {
+		return distanceready;
 	}
 	
 	public void readfromFile() {
