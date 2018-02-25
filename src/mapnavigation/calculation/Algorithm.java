@@ -10,6 +10,7 @@ import mapnavigation.DEFINES;
 public class Algorithm {
 	
 	Converter conv = new Converter();
+	OutputComandline cline = new OutputComandline();
 	
 
 	int[][] colormap;
@@ -44,6 +45,8 @@ public class Algorithm {
 	
 	private int distanceready = 0;
 	
+	private int map[][][];
+	
 //	double outpercentage;
 //	double percentage;
 //	
@@ -64,6 +67,7 @@ public class Algorithm {
 	}
 	
 	public void createmaps() {
+		System.out.println("Karte für createmaps: "+conv.inputfile.getName());
 		//TODO add Status Return
 		colormap= new int[conv.pixelX][conv.pixelY];		//karten größe intitaliesienen
 		distancemap= new double[conv.pixelX][conv.pixelY];	//karten größe initialiesieren
@@ -99,9 +103,17 @@ public class Algorithm {
 			}
 		}
 		
+		map = new int [colormap.length][colormap[0].length][2];
+		for (int i = 0; i < colormap.length; i++) {
+			for (int j = 0; j < colormap[i].length; j++) {
+				map[i][j][0]=colormap[i][j];
+			}
+		}
+		cline.output("colormap", map);
 	}
 	
 	public void cleancolormap() {
+		System.out.println("clean colormap");
 		for (int i = 0; i < colormap.length; i++) {				//colormap komplett weiss färben
 			for (int j = 0; j < colormap[i].length; j++) {
 				if(colormap[i][j]==DEFINES.GREEN||colormap[i][j]==DEFINES.PURPLE) {
@@ -142,6 +154,7 @@ public class Algorithm {
 	}
 	public void calcdistances() {
 		System.out.println(nowalls);
+		done=1;
 		while(done!=0) {// bis kein weiterer punkt auf diese art und weise berechnet werden kann
 			done=0;
 			for (int i = 0; i < distancemap.length; i++) {
@@ -167,6 +180,14 @@ public class Algorithm {
 		}
 //		System.out.println(percentage + ";" + outpercentage);
 		distanceready=1;
+		
+		map = new int [colormap.length][colormap[0].length][2];
+		for (int i = 0; i < colormap.length; i++) {
+			for (int j = 0; j < colormap[i].length; j++) {
+				map[i][j][0]=colormap[i][j];
+			}
+		}
+		cline.output("colormap", map);
 	}
 	public void calcroundpoint() {
 		//kreisformiges abarbeiten der punkte um den temporen punkt(unter tempcoodinate) nach

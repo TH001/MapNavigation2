@@ -88,6 +88,7 @@ public class MainWindow extends JFrame {
 		out_panel_1.setBounds(0, 545, 581, 99);
 		contentPane.add(out_panel_1);
 		
+		
 		Run = new Button("Run Waycalc");
 		Run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -97,8 +98,8 @@ public class MainWindow extends JFrame {
 				SetStart.disable();
 				SetTarget.disable();
 				setStatus("lösche alten Weg bitte Warten", 50, 85);
-				calculation.cleancolormap();
 				repaint();
+				calculation.cleancolormap();
 				setStatus("schreibe Weg bitte Warten", 50, 90);
 				repaint();
 				calculation.markway(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
@@ -355,6 +356,7 @@ public class MainWindow extends JFrame {
 							while(calculation.readimage(picture.getName())!=100) {
 								setStatus("lese Bild",calculation.readimage(picture.getName()),5);
 							}
+							calculation.createmaps();
 		//						checkbutton.setLabel("load?");		
 		//						checkbutton.setBackground(Color.DARK_GRAY);
 		//						checkbutton.setForeground(Color.WHITE);
@@ -426,7 +428,6 @@ public class MainWindow extends JFrame {
 					startY.setBackground(Color.RED);
 //					SetStart.disable();
 					repaint();
-					//TODO add statusmsg
 				}
 				else if(startState==-1) {
 					startX.setBackground(Color.ORANGE);
@@ -459,7 +460,6 @@ public class MainWindow extends JFrame {
 					startY.setBackground(Color.RED);
 //					SetStart.disable();
 					repaint();
-					//TODO add statusmsg
 				}
 				else if(startState==-1) {
 					startX.setBackground(Color.ORANGE);
@@ -490,7 +490,6 @@ public class MainWindow extends JFrame {
 					startY.setBackground(Color.RED);
 //					SetStart.disable();
 					repaint();
-					//TODO add statusmsg
 				}
 				else if(startState==-1) {
 					startX.setBackground(Color.ORANGE);
@@ -577,7 +576,6 @@ public class MainWindow extends JFrame {
 					targetY.setBackground(Color.RED);
 //					SetTarget.disable();
 					repaint();
-					//TODO add statusmsg
 				}
 				else if(targetState==-1) {
 					targetX.setBackground(Color.ORANGE);
@@ -641,7 +639,6 @@ public class MainWindow extends JFrame {
 					targetY.setBackground(Color.RED);
 //					SetTarget.disable();
 					repaint();
-					//TODO add statusmsg
 				}
 				else if(targetState==-1) {
 					targetX.setBackground(Color.ORANGE);
