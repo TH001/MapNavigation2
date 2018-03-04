@@ -9,11 +9,13 @@ package mapnavigation;
 import java.io.File;
 
 import mapnavigation.gui.UIfunktion;
+import mapnavigation.standalone.Standalone;
 
 public class Core {
 ////Objects//////////////////////////////////////////
 	
 	UIfunktion gui = new UIfunktion();
+	Standalone salone =new Standalone();
 	
 	public Core() {
 		
@@ -32,6 +34,7 @@ public class Core {
 	
 	public void run() throws Exception {
 		System.out.println("Point0");
-		gui.run();
+//		gui.run();
+		salone.run();
 	}
 }
