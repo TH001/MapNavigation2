@@ -81,6 +81,56 @@ public class Converter {
 		outputimg = new BufferedImage(pixelX,pixelY, BufferedImage.TYPE_INT_RGB);
 		outputfile= new File(outputname);
 		
+		//Colors shifted
+		for (int j = 0; j < pixelY; j++) {
+			for (int i = 0; i < pixelX; i++) {
+				if(finalmap[i][j]==DEFINES.WHITE) {
+					c = new Color(255, 255, 0);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.BLACK) {
+					c = new Color(125, 0, 0);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.YELLO) {
+					c = new Color(255, 255, 255);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.GREEN) {
+					c = new Color(0, 0, 255);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.BLUE) {
+					c = new Color(0, 255, 0);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.PURPLE) {
+					c = new Color(255, 0, 0);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.RED) {
+					c = new Color(0, 0, 0);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				else if(finalmap[i][j]==DEFINES.ORANGE) {
+					c = new Color(255, 102, 50);
+					outputimg.setRGB(i, j, c.getRGB());
+				}
+				
+			}
+		}
+		
+		try {
+			ImageIO.write(outputimg, "PNG", outputfile);
+		}catch(IOException e) {
+			e.printStackTrace();
+			System.out.println("Error: " + e);
+		}
+	}
+	public void writeorignalpicture(String outputname, int[][] finalmap) {
+		outputimg = new BufferedImage(pixelX,pixelY, BufferedImage.TYPE_INT_RGB);
+		outputfile= new File(outputname);
+		
 		for (int j = 0; j < pixelY; j++) {
 			for (int i = 0; i < pixelX; i++) {
 				if(finalmap[i][j]==DEFINES.WHITE) {

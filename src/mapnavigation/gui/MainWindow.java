@@ -119,7 +119,7 @@ public class MainWindow extends JFrame {
 				setStatus("speichere Datei bitte Warten", 50, 95);
 				repaint();
 				calculation.outputtofile(Outputname.getText());
-				
+				externalframe.reloadeinputmap(Outputname.getText(), MainWindow.this);
 				Run.enable();
 				checkbutton.enable();
 				SetStart.enable();
@@ -733,7 +733,8 @@ public class MainWindow extends JFrame {
 				
 				int x = arg0.getXOnScreen();
 	            int y = arg0.getYOnScreen();
-	            MainWindow.this.setLocation(x - xx, y - xy);  
+	            MainWindow.this.setLocation(x - xx, y - xy);
+	            externalframe.setLocation(x+ MainWindow.this.getWidth() - xx, y -xy);
 			}
 		});
 		label.setBounds(0, 0, 335, 30);
