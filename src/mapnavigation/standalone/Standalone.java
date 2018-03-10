@@ -17,19 +17,19 @@ public class Standalone {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void run() {
+	public int run() {
 		Algorithm calculation = new Algorithm();
-		File picture = new File(inputname);
-		if(picture.exists()) {
+		File map = new File(inputname);
+		if(map.exists()) {
 			calculation.readimage(inputname);
 			calculation.createmaps();
 			if(calculation.posibleposition(startX, startY)==0) {
 				calculation.setuplocation(startX, startY);
 				calculation.calcdistances();
 				if(calculation.posibleposition(targetX, targetY)==0) {
-					calculation.cleancolormap();
 					calculation.markway(targetX, targetY);
 					calculation.outputtofile(outputname);
+					return 0;
 				}
 				else {
 					System.out.println("Ziel konnte nicht gesetzt werden");
@@ -42,5 +42,6 @@ public class Standalone {
 		else {
 			System.out.println("Karte existiert nicht oder liegt am falschen Ort");
 		}
+		return -1;
 	}
 }

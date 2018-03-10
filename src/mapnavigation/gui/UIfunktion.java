@@ -33,6 +33,8 @@ public class UIfunktion {
 					frame.disableall();
 					frame.Inputname.enable();
 					frame.setStatus("geben sie eine Inputkarte an", 0, 0);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -5,6 +5,7 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -25,8 +26,12 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.javafx.tk.Toolkit;
+
+import mapnavigation.DEFINES;
 import mapnavigation.calculation.Algorithm;
 
 
@@ -47,11 +52,13 @@ public class MainWindow extends JFrame {
 	public Button checkbutton;
 	public Button SetStart;
 	public Button SetTarget;
+	public Button outputw;
 	
 	private JLabel StatusMesssage;
 	private JProgressBar progressBar;
 	private JProgressBar progressBar_active;
 	
+	private ImageIcon Logo = new ImageIcon("/designe/imgsource/Logo.png");
 	
 	private int xx,xy;
 	
@@ -79,6 +86,12 @@ public class MainWindow extends JFrame {
 		contentPane.setBackground(Color.WHITE);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+//		setIconImage(Logo.getImage());
+//		setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage("/designe/imgsource/Logo.png"));
+		
+		ExternalViewer externalframe = new ExternalViewer(this);		
+		externalframe.setVisible(true);
 		
 		JPanel out_panel_0 = new JPanel();
 		out_panel_0.setBounds(335, 0, 314, 450);
@@ -130,9 +143,12 @@ public class MainWindow extends JFrame {
 				checkbutton.disable();
 				SetStart.disable();
 				SetTarget.disable();
+				targetX.disable();
+				targetY.disable();
 				setStatus("Calculating Distances please wait", 50, 30);
+//				revalidate();
 				repaint();
-				
+				//TODO funktioniert nicht weil der haupt Tread auf sleep ist solange action Performed active ist
 				calculation.calcdistances();
 				
 				DistancesRun.enable();
@@ -161,63 +177,16 @@ public class MainWindow extends JFrame {
 		DistancesRun.setBounds(25, 445, 283, 36);
 		contentPane.add(DistancesRun);
 		
-		JLabel lbl_close = new JLabel("X");
-		lbl_close.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				finallydone = 1;
-				writetoFile();
-				System.exit(0);
-			}
-		});
-		lbl_close.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_close.setForeground(new Color(241, 57, 83));
-		lbl_close.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lbl_close.setBounds(302, 0, 37, 27);
-		contentPane.add(lbl_close);
-
-		JLabel lbl_minimize = new JLabel("_");
-		lbl_minimize.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-//				this.setState(Frame.ICONIFIED);//TODO change Wrong place
-			}
-		});
-		lbl_minimize.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_minimize.setForeground(new Color(241, 57, 83));
-		lbl_minimize.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lbl_minimize.setBounds(282, 0, 37, 27);
-		contentPane.add(lbl_minimize);
-		
-		JLabel lblNewLabel = new JLabel("MapNavigation V2.3 ready to go");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setForeground(new Color(240, 248, 255));
-		lblNewLabel.setBounds(5, 0, 260, 27);
-		contentPane.add(lblNewLabel);
-		
-		JLabel label = new JLabel("");
-		contentPane.add(label);
-		label.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				
-				 xx = e.getX();
-			     xy = e.getY();
-			}
-		});
-		label.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent arg0) {
-				
-				int x = arg0.getXOnScreen();
-	            int y = arg0.getYOnScreen();
-	            MainWindow.this.setLocation(x - xx, y - xy);  
-			}
-		});
-		label.setBounds(0, 0, 335, 30);
-		label.setVerticalAlignment(SwingConstants.TOP);
-		label.setIcon(new ImageIcon(MainWindow.class.getResource("/designe/imgsource/picture1.jpg")));
+//		Run = new Button("External Viewer");
+//		Run.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				ExternalViewer externalframe = new ExternalViewer(this, Inputname.getText());
+//			}
+//		});
+//		Run.setForeground(Color.WHITE);
+//		Run.setBackground(new Color(50, 220, 240));
+//		Run.setBounds(25, 535, 283, 36);
+//		contentPane.add(Run);
 		
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -294,6 +263,8 @@ public class MainWindow extends JFrame {
 						startY.enable();
 						SetStart.enable();
 						setStatus("geben sie einen Startpunkt an", 0, 10);
+						
+						externalframe.reloadeinputmap(Inputname.getText(),MainWindow.this);
 						repaint();
 					}
 					else {
@@ -325,6 +296,7 @@ public class MainWindow extends JFrame {
 						SetStart.enable();
 						setStatus("geben sie einen Startpunkt an", 0, 10);
 						repaint();
+//						externalframe.reloadeinputmap(Inputname.getText());
 					}
 					else {
 						checkbutton.setLabel("not found");
@@ -363,6 +335,7 @@ public class MainWindow extends JFrame {
 		//						checkedInput = 0;
 							System.out.println("changeto:" + checkedInput);
 							writetoFile();
+//							externalframe.reloadeinputmap(Inputname.getText());
 						}
 						else {
 							checkbutton.setLabel("not found");
@@ -705,13 +678,74 @@ public class MainWindow extends JFrame {
 		SetTarget.setForeground(Color.WHITE);
 		SetTarget.setBackground(Color.BLUE);
 		
+//		ExternalViewer externalframe = new ExternalViewer(this);		
+//		externalframe.setVisible(true);
+		
+		JLabel lbl_close = new JLabel("X");
+		lbl_close.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				finallydone = 1;
+				writetoFile();
+				System.exit(0);
+			}
+		});
+		lbl_close.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_close.setForeground(new Color(241, 57, 83));
+		lbl_close.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lbl_close.setBounds(302, 0, 37, 27);
+		contentPane.add(lbl_close);
+
+		JLabel lbl_minimize = new JLabel("_");
+		lbl_minimize.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				setState(Frame.ICONIFIED);//TODO change Wrong place
+				externalframe.setState(Frame.ICONIFIED);
+			}
+		});
+		lbl_minimize.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_minimize.setForeground(new Color(241, 57, 83));
+		lbl_minimize.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lbl_minimize.setBounds(282, 0, 37, 27);
+		contentPane.add(lbl_minimize);
+		
+		JLabel lblNewLabel = new JLabel(DEFINES.VERSION + " ready to go");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNewLabel.setForeground(new Color(240, 248, 255));
+		lblNewLabel.setBounds(5, 0, 260, 27);
+		contentPane.add(lblNewLabel);
+		
+		JLabel label = new JLabel("");
+		contentPane.add(label);
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				 xx = e.getX();
+			     xy = e.getY();
+			}
+		});
+		label.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				
+				int x = arg0.getXOnScreen();
+	            int y = arg0.getYOnScreen();
+	            MainWindow.this.setLocation(x - xx, y - xy);  
+			}
+		});
+		label.setBounds(0, 0, 335, 30);
+		label.setVerticalAlignment(SwingConstants.TOP);
+		label.setIcon(new ImageIcon(MainWindow.class.getResource("/designe/imgsource/picture1.jpg")));
 		
 		JLabel background = new JLabel("");
 		background.setBounds(-112, -48, 600, 600);
 		contentPane.add(background);
 		background.setVerticalAlignment(SwingConstants.TOP);
 		background.setIcon(new ImageIcon(MainWindow.class.getResource("/designe/imgsource/LogoWaterprint.png")));
-		
+	
 	}
 	
 	public void disableall() {

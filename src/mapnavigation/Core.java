@@ -34,7 +34,7 @@ public class Core {
 	
 	public void run() throws Exception {
 		System.out.println("Point0");
-//		gui.run();
-		salone.run();
+		gui.run();
+//		salone.run();
 	}
 }

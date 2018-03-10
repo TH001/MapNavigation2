@@ -103,13 +103,15 @@ public class Algorithm {
 			}
 		}
 		
-		map = new int [colormap.length][colormap[0].length][2];
-		for (int i = 0; i < colormap.length; i++) {
-			for (int j = 0; j < colormap[i].length; j++) {
-				map[i][j][0]=colormap[i][j];
-			}
-		}
-		cline.output("colormap", map);
+//		output for testing
+//		map = new int [colormap.length][colormap[0].length][2];
+//		for (int i = 0; i < colormap.length; i++) {
+//			for (int j = 0; j < colormap[i].length; j++) {
+//				map[i][j][0]=colormap[i][j];
+//			}
+//		}
+//		cline.output("colormap", map);
+		
 	}
 	
 	public void cleancolormap() {
@@ -181,13 +183,14 @@ public class Algorithm {
 //		System.out.println(percentage + ";" + outpercentage);
 		distanceready=1;
 		
-		map = new int [colormap.length][colormap[0].length][2];
-		for (int i = 0; i < colormap.length; i++) {
-			for (int j = 0; j < colormap[i].length; j++) {
-				map[i][j][0]=colormap[i][j];
-			}
-		}
-		cline.output("colormap", map);
+//		output for testing
+//		map = new int [colormap.length][colormap[0].length][2];
+//		for (int i = 0; i < colormap.length; i++) {
+//			for (int j = 0; j < colormap[i].length; j++) {
+//				map[i][j][0]=colormap[i][j];
+//			}
+//		}
+//		cline.output("colormap", map);
 	}
 	public void calcroundpoint() {
 		//kreisformiges abarbeiten der punkte um den temporen punkt(unter tempcoodinate) nach
@@ -305,6 +308,32 @@ public class Algorithm {
 	}
 	
 	public void outputtofile(String outputname) {
+//		output for testing
+		map = new int [colormap.length][colormap[0].length][2];
+		for (int i = 0; i < colormap.length; i++) {
+			for (int j = 0; j < colormap[i].length; j++) {
+				map[i][j][0]=colormap[i][j];
+			}
+		}
+		cline.output("colormap", map);
+		map = new int [distancemap.length][distancemap[0].length][2];
+		for (int i = 0; i < distancemap.length; i++) {
+			for (int j = 0; j < distancemap[i].length; j++) {
+				map[i][j][0]=(int)distancemap[i][j];
+			}
+		}
+		cline.output("distancemap double", map);
+		map = new int [lasthopmap.length][lasthopmap[0].length][lasthopmap[0][0].length];
+		for (int i = 0; i < lasthopmap.length; i++) {
+			for (int j = 0; j < lasthopmap[i].length; j++) {
+				for (int k = 0; k < lasthopmap[i][j].length; k++) {
+					map[i][j][k]=lasthopmap[i][j][k];
+				}
+			}
+		}
+		cline.output("lasthopmap", map);
+		
+		
 		conv.writepicture(outputname,colormap);
 	}
 	

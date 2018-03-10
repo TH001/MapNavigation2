@@ -8,6 +8,7 @@ public class OutputComandline {
 	public void output(String usage,int[][][] map){
 		switch (usage){
 			case "colormap":
+				System.out.println("colormap");
 				for (int i = 0; i < map[0].length; i++) {
 					for (int j = 0; j < map.length; j++) {
 						System.out.print(" __");
@@ -25,6 +26,7 @@ public class OutputComandline {
 				System.out.println();
 			break;
 			case "distancemap double":
+				System.out.println("distancemap double");
 				for (int i = 0; i < map[0].length; i++) {
 					for (int j = 0; j < map.length; j++) {
 						System.out.print(" ____");
@@ -50,6 +52,7 @@ public class OutputComandline {
 				System.out.println();
 			break;
 			case "lasthopmap":
+				System.out.println("lasthopmap");
 				for (int i = 1; i < map[0].length-1; i++) {
 					for (int j = 1; j < map.length-1; j++) {
 						System.out.print(" _____");
