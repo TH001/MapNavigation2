@@ -125,7 +125,7 @@ public class Algorithm {
 		}
 	}
 	
-	public int posibleposition(int xCoodinate, int yCoodinate) {
+	public int possibleposition(int xCoodinate, int yCoodinate) {
 		if(xCoodinate<0||xCoodinate>=colormap.length||yCoodinate<0||yCoodinate>=colormap[0].length) {
 			return -2;
 		}

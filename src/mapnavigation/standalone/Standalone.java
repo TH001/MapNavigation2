@@ -23,10 +23,10 @@ public class Standalone {
 		if(map.exists()) {
 			calculation.readimage(inputname);
 			calculation.createmaps();
-			if(calculation.posibleposition(startX, startY)==0) {
+			if(calculation.possibleposition(startX, startY)==0) {
 				calculation.setuplocation(startX, startY);
 				calculation.calcdistances();
-				if(calculation.posibleposition(targetX, targetY)==0) {
+				if(calculation.possibleposition(targetX, targetY)==0) {
 					calculation.markway(targetX, targetY);
 					calculation.outputtofile(outputname);
 					return 0;

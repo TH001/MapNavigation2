@@ -2,7 +2,7 @@ package mapnavigation;
 
 public final class DEFINES {
 
-	public static final String VERSION = "MapNavigation V2.5";
+	public static final String VERSION = "MapNavigation V2.6";
 	
 	public static final int WHITE	= 0;
 	public static final int BLACK	= 1;

@@ -31,6 +31,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.sun.javafx.tk.Toolkit;
 
+import jdk.internal.dynalink.linker.ConversionComparator;
 import mapnavigation.DEFINES;
 import mapnavigation.calculation.Algorithm;
 
@@ -92,6 +93,8 @@ public class MainWindow extends JFrame {
 		
 		ExternalViewer externalframe = new ExternalViewer(this);		
 		externalframe.setVisible(true);
+		
+		System.out.print(externalframe.getlastclickX()+"|"+externalframe.getlastclickY());
 		
 		JPanel out_panel_0 = new JPanel();
 		out_panel_0.setBounds(335, 0, 314, 450);
@@ -252,6 +255,10 @@ public class MainWindow extends JFrame {
 							setStatus("lese Bild",calculation.readimage(picture.getName()),5);
 						}
 						calculation.createmaps();
+						calculation.outputtofile("temp.png");
+						externalframe.reloadeinputmap("temp.png",MainWindow.this);
+						File temp = new File("temp.png");
+						temp.delete();						
 						checkbutton.setLabel("checked");
 						checkbutton.setBackground(Color.GREEN);
 						checkbutton.setForeground(Color.DARK_GRAY);
@@ -263,8 +270,6 @@ public class MainWindow extends JFrame {
 						startY.enable();
 						SetStart.enable();
 						setStatus("geben sie einen Startpunkt an", 0, 10);
-						
-						externalframe.reloadeinputmap(Inputname.getText(),MainWindow.this);
 						repaint();
 					}
 					else {
@@ -395,7 +400,11 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				startX.setText(startX.getText().replaceAll("\\D+",""));
-				startState=calculation.posibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+				if(Integer.parseInt(startX.getText())==0){
+					startX.setText(""+(externalframe.getlastclickX()));
+					startY.setText(""+(externalframe.getlastclickY()));
+				}
+				startState=calculation.possibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
 				if(startState==-2) {
 					startX.setBackground(Color.RED);
 					startY.setBackground(Color.RED);
@@ -427,7 +436,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				startY.setText(startY.getText().replaceAll("\\D+",""));
-				startState=calculation.posibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+				startState=calculation.possibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
 				if(startState==-2) {
 					startX.setBackground(Color.RED);
 					startY.setBackground(Color.RED);
@@ -457,7 +466,7 @@ public class MainWindow extends JFrame {
 		SetStart = new Button("Set Start");
 		SetStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				startState=calculation.posibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
+				startState=calculation.possibleposition(Integer.parseInt(startX.getText()), Integer.parseInt(startY.getText()));
 				if(startState==-2) {
 					startX.setBackground(Color.RED);
 					startY.setBackground(Color.RED);
@@ -543,7 +552,11 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				targetX.setText(targetX.getText().replaceAll("\\D+",""));
-				targetState=calculation.posibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				if(Integer.parseInt(targetX.getText())==0){
+					targetX.setText(""+(externalframe.getlastclickX()));
+					targetY.setText(""+(externalframe.getlastclickY()));
+				}
+				targetState=calculation.possibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
 				if(targetState==-2) {
 					targetX.setBackground(Color.RED);
 					targetY.setBackground(Color.RED);
@@ -575,7 +588,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				targetY.setText(targetY.getText().replaceAll("\\D+",""));
-				targetState=calculation.posibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				targetState=calculation.possibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
 				if(targetState==-2) {
 					targetX.setBackground(Color.RED);
 					targetY.setBackground(Color.RED);
@@ -606,7 +619,7 @@ public class MainWindow extends JFrame {
 		SetTarget = new Button("Set Target");
 		SetTarget.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				targetState=calculation.posibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
+				targetState=calculation.possibleposition(Integer.parseInt(targetX.getText()), Integer.parseInt(targetY.getText()));
 				if(targetState==-2) {
 					targetX.setBackground(Color.RED);
 					targetY.setBackground(Color.RED);
